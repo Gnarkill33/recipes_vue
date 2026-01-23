@@ -1,3 +1,4 @@
+import './assets/styles/index.sass'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
