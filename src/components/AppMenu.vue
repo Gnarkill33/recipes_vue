@@ -67,9 +67,32 @@
         </g>
       </svg>
     </div>
+    <el-menu class="nav el-menu-vertical-demo">
+      <el-menu-item index="1">
+        <el-icon :size="24"><Food /></el-icon>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <el-icon :size="24"><Dish /></el-icon>
+      </el-menu-item>
+    </el-menu>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@use '@/assets/styles/index.scss';
+@use '@/assets/styles/index.scss' as *;
+
+.menu {
+  height: 100vh;
+  padding: 20px 5px 0;
+  border-right: 1px solid $border;
+}
+
+.nav {
+  border: none;
+}
+
+.logo {
+  padding: 0 15px 15px;
+  border-bottom: 1px solid $border;
+}
 </style>
