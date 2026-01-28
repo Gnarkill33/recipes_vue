@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue'
+import AppButton from '@/components/AppButton.vue'
 </script>
 
 <template>
   <main>
-    <AppLayout />
+    <AppLayout>
+      <template #title> Recipes </template>
+      <template #controls> <AppButton /> </template>
+    </AppLayout>
   </main>
 </template>
