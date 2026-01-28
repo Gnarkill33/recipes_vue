@@ -7,7 +7,7 @@ import AppButton from '@/components/AppButton.vue'
   <main>
     <AppLayout>
       <template #title> Recipes </template>
-      <template #controls> <AppButton /> </template>
+      <template #controls> <AppButton text="Add recipe" /> </template>
     </AppLayout>
   </main>
 </template>
