@@ -1,4 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ROUTES } from '@/constants'
+
+useRouter()
+const route = useRoute()
+
+const isPathActive = (path: string) => {
+  return route.path === path
+}
+
+onMounted(isPathActive)
+</script>
 
 <template>
   <div class="menu">
@@ -67,11 +80,14 @@
         </g>
       </svg>
     </div>
-    <el-menu class="nav el-menu-vertical-demo">
-      <el-menu-item index="1">
+    <el-menu :router="true" class="nav el-menu-vertical-demo">
+      <el-menu-item :index="ROUTES.HOME" :class="['item', isPathActive(ROUTES.HOME) && 'active']">
         <el-icon :size="24"><Food /></el-icon>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item
+        :index="ROUTES.CATEGORIES"
+        :class="['item', isPathActive(ROUTES.CATEGORIES) && 'active']"
+      >
         <el-icon :size="24"><Dish /></el-icon>
       </el-menu-item>
     </el-menu>
@@ -94,5 +110,13 @@
 .logo {
   padding: 0 15px 15px;
   border-bottom: 1px solid $border;
+}
+
+.item {
+  color: $violet;
+
+  &.active {
+    color: $pink;
+  }
 }
 </style>

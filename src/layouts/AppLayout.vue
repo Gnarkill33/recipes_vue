@@ -16,6 +16,9 @@ import AppMenu from '@/components/AppMenu.vue'
           <slot name="controls"></slot>
         </div>
       </header>
+      <div class="inner">
+        <slot name="inner"></slot>
+      </div>
     </main>
   </div>
 </template>
