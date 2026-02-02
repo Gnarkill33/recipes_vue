@@ -26,7 +26,11 @@ onMounted(fetchRecipes)
   <main>
     <AppLayout>
       <template #title> Recipes </template>
-      <template #controls> <AppButton text="Add recipe" /> </template>
+
+      <template #controls>
+        <router-link :to="getRecipePath('new')">
+          <AppButton text="Add recipe" /> </router-link
+      ></template>
       <template #inner>
         <div class="wrapper">
           <el-table :data="recipes" style="width: 100%">

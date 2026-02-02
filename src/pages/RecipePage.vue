@@ -7,11 +7,16 @@ import { RecipeService } from '@/services'
 
 const route = useRoute()
 const recipeId = route.params.id as string
-const recipe = ref()
+const recipe = ref(RecipeService.getEmptyRecipe())
+const recipeUpdated = ref(RecipeService.getEmptyRecipe())
+const isCreatingMode = ref(true)
 
 const fetchRecipe = async () => {
   try {
-    recipe.value = await RecipeService.getRecipesById(recipeId)
+    const data = await RecipeService.getRecipesById(recipeId)
+    recipe.value = data
+    recipeUpdated.value = data
+    isCreatingMode.value = false
   } catch (error) {
     console.error(error)
   }
@@ -27,9 +32,9 @@ onMounted(() => {
 <template>
   <main>
     <AppLayout>
-      <template #title> Recipe </template>
+      <template #title> {{ isCreatingMode ? 'New Recipe' : recipeUpdated.strMeal }} </template>
       <template #controls> <AppButton text="Save" /> </template>
-      <template #inner> </template>
+      <template #inner> {{ recipeUpdated }}</template>
     </AppLayout>
   </main>
 </template>
