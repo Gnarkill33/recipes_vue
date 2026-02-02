@@ -50,4 +50,8 @@ import AppMenu from '@/components/AppMenu.vue'
   font-weight: 700;
   color: $violet;
 }
+
+.inner {
+  padding-top: 20xp;
+}
 </style>
