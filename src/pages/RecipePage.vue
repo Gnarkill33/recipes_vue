@@ -45,6 +45,14 @@ const normalizeRecipeInredients = () => {
   recipeIngredients.value = normalizedIngredients
 }
 
+const addIngredient = () => {
+  recipeIngredients.value.push(CommonService.getEmptyIngredient())
+}
+
+const deleteIngredient = (index: number) => {
+  recipeIngredients.value.splice(index, 1)
+}
+
 onMounted(async () => {
   if (parseInt(recipeId)) {
     await fetchRecipe()
@@ -90,17 +98,7 @@ onMounted(async () => {
               </el-select>
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <div class="label">Instructions</div>
-              <el-input
-                v-model="recipeUpdated.strInstructions"
-                :autosize="{ minRows: 2, maxRows: 4 }"
-                type="textarea"
-                placeholder="Instructions"
-              />
-            </div>
-          </div>
+
           <div class="ingredients">
             <div class="subtitle">Ingredients</div>
             <div
@@ -119,6 +117,21 @@ onMounted(async () => {
                 <div class="label">Title</div>
                 <el-input v-model="recipeIngredients[index]!.title" placeholder="Title" />
               </div>
+              <div class="col col-sm">
+                <AppButton text="Delete" @click="() => deleteIngredient(index)"></AppButton>
+              </div>
+            </div>
+            <AppButton text="Add ingredient" @click="addIngredient"></AppButton>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="label">Instructions</div>
+              <el-input
+                v-model="recipeUpdated.strInstructions"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                type="textarea"
+                placeholder="Instructions"
+              />
             </div>
           </div>
         </div>
