@@ -2,29 +2,53 @@
 import { useRoute } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import AppButton from '@/components/AppButton.vue'
-import { onMounted, ref } from 'vue'
-import { RecipeService } from '@/services'
+import { onMounted, ref, computed } from 'vue'
+import { RecipeService, CommonService } from '@/services'
+import { useRootStore } from '@/stores/root'
 
 const route = useRoute()
+const rootStore = useRootStore()
 const recipeId = route.params.id as string
 const recipe = ref(RecipeService.getEmptyRecipe())
 const recipeUpdated = ref(RecipeService.getEmptyRecipe())
 const isCreatingMode = ref(true)
+const recipeIngredients = ref([CommonService.getEmptyIngredient()])
+const areas = computed(() => rootStore.areas)
+const categories = computed(() => rootStore.categories)
 
 const fetchRecipe = async () => {
   try {
     const data = await RecipeService.getRecipesById(recipeId)
-    recipe.value = data
-    recipeUpdated.value = data
+    recipe.value = { ...data }
+    recipeUpdated.value = { ...data }
     isCreatingMode.value = false
   } catch (error) {
     console.error(error)
   }
 }
 
-onMounted(() => {
+const normalizeRecipeInredients = () => {
+  const normalizedIngredients = []
+
+  for (let i = 1; i <= 20; i++) {
+    const ingredientKey = `strIngredient${i}` as keyof typeof recipe.value
+    const ingredientMeasure = `strMeasure${i}` as keyof typeof recipe.value
+    if (recipe.value[ingredientKey]) {
+      const ingredient = {
+        title: recipe.value[ingredientKey],
+        measure: recipe.value[ingredientMeasure] || '',
+      }
+
+      normalizedIngredients.push(ingredient)
+    }
+  }
+  recipeIngredients.value = normalizedIngredients
+}
+
+onMounted(async () => {
   if (parseInt(recipeId)) {
-    fetchRecipe()
+    await fetchRecipe()
+    normalizeRecipeInredients()
   }
 })
 </script>
@@ -34,7 +58,71 @@ onMounted(() => {
     <AppLayout>
       <template #title> {{ isCreatingMode ? 'New Recipe' : recipeUpdated.strMeal }} </template>
       <template #controls> <AppButton text="Save" /> </template>
-      <template #inner> {{ recipeUpdated }}</template>
+      <template #inner>
+        <div class="wrapper">
+          <div class="row">
+            <div class="col">
+              <div class="label">Title</div>
+              <el-input v-model="recipeUpdated.strMeal" placeholder="Title" />
+            </div>
+            <div class="col">
+              <div class="label">Area</div>
+              <el-select v-model="recipeUpdated.strArea" placeholder="Area">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.strArea"
+                  :label="item.strArea"
+                  :value="item.strArea"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="label">Category</div>
+              <el-select v-model="recipeUpdated.strCategory" placeholder="Category">
+                <el-option
+                  v-for="item in categories"
+                  :key="item.strCategory"
+                  :label="item.strCategory"
+                  :value="item.strCategory"
+                />
+              </el-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="label">Instructions</div>
+              <el-input
+                v-model="recipeUpdated.strInstructions"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                type="textarea"
+                placeholder="Instructions"
+              />
+            </div>
+          </div>
+          <div class="ingredients">
+            <div class="subtitle">Ingredients</div>
+            <div
+              v-for="(ingredient, index) in recipeIngredients"
+              :key="`${ingredient.title}-${index}`"
+              class="row"
+            >
+              <div class="col col-sm">
+                {{ index + 1 }}
+              </div>
+              <div class="col">
+                <div class="label">Measure</div>
+                <el-input v-model="recipeIngredients[index]!.measure" placeholder="Measure" />
+              </div>
+              <div class="col">
+                <div class="label">Title</div>
+                <el-input v-model="recipeIngredients[index]!.title" placeholder="Title" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </AppLayout>
   </main>
 </template>
