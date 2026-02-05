@@ -4,11 +4,20 @@ defineProps({
     type: String,
     default: '',
   },
+  circle: {
+    type: Boolean,
+    default: false,
+  },
+  icon: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 
 <template>
-  <el-button type="primary" class="btn">{{ text }}</el-button>
+  <el-button v-if="!circle" type="primary" class="btn">{{ text }}</el-button>
+  <el-button v-else circle :icon="icon" type="primary" class="circle" />
 </template>
 
 <style lang="scss" scoped>
@@ -19,5 +28,11 @@ defineProps({
   font-size: 17px;
   border-radius: 4px;
   background-color: $violet;
+}
+
+.circle {
+  font-size: 16px;
+  background-color: $violet;
+  border: none;
 }
 </style>
