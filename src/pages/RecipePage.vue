@@ -35,6 +35,7 @@ const normalizeRecipeInredients = () => {
     const ingredientMeasure = `strMeasure${i}` as keyof typeof recipe.value
     if (recipe.value[ingredientKey]) {
       const ingredient = {
+        id: Math.random().toString(36).slice(2),
         title: recipe.value[ingredientKey],
         measure: recipe.value[ingredientMeasure] || '',
       }
@@ -98,15 +99,14 @@ onMounted(async () => {
               </el-select>
             </div>
           </div>
-
           <div class="ingredients">
             <div class="subtitle">Ingredients</div>
             <div
               v-for="(ingredient, index) in recipeIngredients"
-              :key="`${ingredient.title}-${index}`"
-              class="row"
+              :key="`${ingredient.id}-${index}`"
+              class="row align-items-flex-end"
             >
-              <div class="col col-sm">
+              <div class="col col-sm mb-2">
                 {{ index + 1 }}
               </div>
               <div class="col">
@@ -117,15 +117,15 @@ onMounted(async () => {
                 <div class="label">Title</div>
                 <el-input v-model="recipeIngredients[index]!.title" placeholder="Title" />
               </div>
-              <div class="col col-sm">
-                <AppButton text="Delete" @click="() => deleteIngredient(index)"></AppButton>
+              <div class="col col-sm mb-2">
+                <AppButton circle icon="Delete" @click="() => deleteIngredient(index)"></AppButton>
               </div>
             </div>
             <AppButton text="Add ingredient" @click="addIngredient"></AppButton>
           </div>
           <div class="row">
             <div class="col">
-              <div class="label">Instructions</div>
+              <div class="subtitle">Instructions</div>
               <el-input
                 v-model="recipeUpdated.strInstructions"
                 :autosize="{ minRows: 2, maxRows: 4 }"
@@ -139,3 +139,13 @@ onMounted(async () => {
     </AppLayout>
   </main>
 </template>
+
+<style lang="scss" scoped>
+.ingredients {
+  padding-bottom: 16px;
+}
+
+.mb-2 {
+  margin-bottom: 4px;
+}
+</style>
