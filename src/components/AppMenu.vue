@@ -98,7 +98,8 @@ onMounted(isPathActive)
 @use '@/assets/styles/index.scss' as *;
 
 .menu {
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   padding: 20px 5px 0;
   border-right: 1px solid $border;
 }
