@@ -46,12 +46,57 @@ const normalizeRecipeInredients = () => {
   recipeIngredients.value = normalizedIngredients
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const denormalizeIngredients = (recipe: any) => {
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = recipeIngredients.value[i - 1]
+
+    if (ingredient?.title && ingredient?.measure) {
+      recipe[`strIngredient${i}`] = ingredient.title
+      recipe[`strMeasure${i}`] = ingredient.measure
+    } else {
+      recipe[`strIngredient${i}`] = ''
+      recipe[`strMeasure${i}`] = ''
+    }
+  }
+}
+
 const addIngredient = () => {
   recipeIngredients.value.push(CommonService.getEmptyIngredient())
 }
 
 const deleteIngredient = (index: number) => {
   recipeIngredients.value.splice(index, 1)
+}
+
+const createOrUpdateRecipe = () => {
+  if (isCreatingMode.value) {
+    createRecipe()
+  } else {
+    updateRecipe()
+  }
+}
+
+const createRecipe = async () => {
+  try {
+    const params = { ...recipeUpdated.value }
+    denormalizeIngredients(params)
+
+    await RecipeService.createRecipe()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const updateRecipe = async () => {
+  try {
+    const params = { ...recipeUpdated.value }
+    denormalizeIngredients(params)
+
+    await RecipeService.updateRecipe()
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 onMounted(async () => {
@@ -66,7 +111,7 @@ onMounted(async () => {
   <main>
     <AppLayout>
       <template #title> {{ isCreatingMode ? 'New Recipe' : recipeUpdated.strMeal }} </template>
-      <template #controls> <AppButton text="Save" /> </template>
+      <template #controls> <AppButton text="Save" @onClick="createOrUpdateRecipe" /> </template>
       <template #inner>
         <div class="wrapper">
           <div class="row">

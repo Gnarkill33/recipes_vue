@@ -12,3 +12,7 @@ export const getRecipesById = async (id: string) => {
 
   return data?.data.meals[0]
 }
+
+export const createRecipe = () => {}
+
+export const updateRecipe = () => {}
