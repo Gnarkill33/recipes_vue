@@ -2,12 +2,14 @@
 import { useRoute } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
 import AppButton from '@/components/AppButton.vue'
+import AppLoader from '@/components/AppLoader.vue'
 import { onMounted, ref, computed } from 'vue'
 import { RecipeService, CommonService } from '@/services'
 import { useRootStore } from '@/stores/root'
 
 const route = useRoute()
 const rootStore = useRootStore()
+const isLoading = ref(false)
 const recipeId = route.params.id as string
 const recipe = ref(RecipeService.getEmptyRecipe())
 const recipeUpdated = ref(RecipeService.getEmptyRecipe())
@@ -18,7 +20,9 @@ const categories = computed(() => rootStore.categories)
 
 const fetchRecipe = async () => {
   try {
+    isLoading.value = true
     const data = await RecipeService.getRecipesById(recipeId)
+    isLoading.value = false
     recipe.value = { ...data }
     recipeUpdated.value = { ...data }
     isCreatingMode.value = false
@@ -113,7 +117,8 @@ onMounted(async () => {
       <template #title> {{ isCreatingMode ? 'New Recipe' : recipeUpdated.strMeal }} </template>
       <template #controls> <AppButton text="Save" @onClick="createOrUpdateRecipe" /> </template>
       <template #inner>
-        <div class="wrapper">
+        <AppLoader v-if="isLoading" />
+        <div v-else class="wrapper">
           <div class="row">
             <div class="col">
               <div class="label">Title</div>
