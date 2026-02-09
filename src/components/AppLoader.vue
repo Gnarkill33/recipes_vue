@@ -1,6 +1,12 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const isLoading = ref(true)
+</script>
+
 <template>
   <transition>
-    <div class="root">
+    <div class="root" v-show="isLoading">
       <div class="header">Loading...</div>
     </div>
   </transition>
